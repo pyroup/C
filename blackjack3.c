@@ -19,18 +19,21 @@ void game() ;
 void game_decision() ;
 
 int main() {
-    int i,j;
-    char str[5] ;
+    int i,j ;
+    char str[8] ;
 
     printf("[BLACKJACK]\n") ;
     
     Sleep(1000) ;
     while( (player_chip > 0) && (player_chip < 150) ) {
+        //賭けるチップ数を選択
         printf("Bet your chip > ") ;
         gets(str) ;
         bet_chip = atoi(str) ;
-        while ( bet_chip > player_chip ) {
+        //文字か0もしくは手持ちのチップよりも賭けるチップが多い場合の繰り返し処理
+        while ( bet_chip > player_chip || bet_chip == 0 ) {
             printf("You cannot bet %d chips\n",bet_chip) ;
+            Sleep(500) ;
             printf("Bet your chip > ") ;
             gets(str) ;
             bet_chip = atoi(str) ;
@@ -38,6 +41,7 @@ int main() {
         game() ;
         Sleep(1000) ;
         game_decision() ;
+
         //初期化
         dealer = 0 ;
         player = 0 ;
@@ -48,7 +52,7 @@ int main() {
                 card[i][j] = 0 ;
             }
         }
-        Sleep(1500) ;
+        Sleep(1000) ;
     }
     if(player_chip == 0) {
         printf("Player lost the game") ;
@@ -59,6 +63,7 @@ int main() {
     return 0 ;    
 }
 
+//ブラックジャックを一回行う関数
 void game() {
 	char y_n[3] ;
     int i ;
@@ -82,6 +87,7 @@ void game() {
     //プレーヤーのターン
     while (player < 21)  {
         printf("do you drow onemore? yes or no\n") ;
+        Sleep(500) ;
         scanf("%s",&y_n) ;
         while (getchar() != '\n') {}
         if (strcmp(y_n,"yes") == 0) {
@@ -94,6 +100,8 @@ void game() {
         	printf("Input yes or no!\n") ;
             continue ;
         }
+
+        // Aが手札にあった場合の処理
         if(player > 21) {
             for (i = 0 ; i < player_count ; i++) {
                 if(player_tehuda[i] == 11) {
@@ -110,6 +118,8 @@ void game() {
     printf("dealer draw cards\n") ;
     do {
         dealer += drawcard(0,0) ;
+
+        // Aが手札にあった場合の処理
         if(dealer > 21) {
             for (i = 0 ; i < dealer_count ; i++) {
                 if(dealer_tehuda[i] == 11) {
@@ -122,6 +132,7 @@ void game() {
     } while( dealer < 17 ) ;
 }
 
+//ブラックジャックの勝負判定とチップ計算をする関数
 void game_decision() {
     printf("Player is %d , Dealer is %d\n",player,dealer) ;
     Sleep(500) ;
@@ -144,20 +155,19 @@ void game_decision() {
     }
     Sleep(500) ;
     printf("The rest of your chip is %d\n",player_chip) ;
-    player = 0 ;
-    dealer = 0 ;
 }
 
+//カードを引く関数
 int drawcard(int h,int l) {
     int draw_digit ;
     int draw_mark ;
     int r ;
     
+    //引いた数字とマークを記憶して、同じカードを引いた場合は繰り返し処理
     do {
         draw_digit = rand()%13 ;
         draw_mark = rand()%4 ;
     } while (card[draw_mark][draw_digit] == 1) ;
-
     card[draw_mark][draw_digit] = 1 ;
     
     if (h) {
@@ -165,13 +175,62 @@ int drawcard(int h,int l) {
     } 
 
     if (l == 1) {
+        //player_tehudaにdraw_digitの結果を格納
         player_tehuda[player_count] = total[draw_digit] ;
         player_count++ ;
     }
     else if (l == 0) { 
+        //dealer_tehudaにdraw_digitの結果を格納
         dealer_tehuda[dealer_count] = total[draw_digit] ;
         dealer_count++ ;
     }
     r = total[draw_digit] ;
     return r ;
 } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    
+
+
+
+
